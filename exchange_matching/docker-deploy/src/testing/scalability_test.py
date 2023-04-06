@@ -43,34 +43,11 @@ class TradingSystem:
         s = self.create_socket()
         s.sendall(self.generate_create_xml(id, balance, position))
 
-        try:
-            data = s.recv(self.buffer_size)
-            s.close()
-            print(data)
-            print("=============================")
-
-        except Exception as e:
-            print(e)
-            print("Exception raised.")
-            s.close()
-            return
 
     def generate_transaction_request(self, id, order, query=None, cancel=None):
         s = self.create_socket()
         a = self.generate_trans_xml(id, order, query, cancel)
         s.sendall(a)
-
-        try:
-            data = s.recv(self.buffer_size)
-            s.close()
-            print(data)
-            print("=============================")
-
-        except Exception as e:
-            print(e)
-            print("Exception raised.")
-            s.close()
-            return
 
 def test(trading_system):
     trading_system.generate_create_request("1", "100000", {"AAPL": "100", "GOOG": "200"})
