@@ -1,0 +1,453 @@
+Tables dropped successfully!
+Tables created successfully!
+proxy setup success
+connect client success
+Connection from: 10.198.113.48
+account_1 10000.000000
+account_2 10000.000000
+account_3 30000.000000
+account_4 10000.000000
+account_1 10000.000000
+symbol_A 1: 1000, 1: 1000, 2: 1000, 5: 1000
+symbol_A 1: 1000
+symbol_B 2: 1000, 3: 1000
+symbol_C 1: 1000
+symbol_A 4: 1000
+symbol_B 4: 1000
+the result xml is: 
+<?xml version="1.0"?>
+<results>
+	<created id="1" />
+	<created id="2" />
+	<created id="3" />
+	<created id="4" />
+	<error id="1">Account already exists</error>
+	<created sym="A" id="1" />
+	<created sym="A" id="1" />
+	<created sym="A" id="2" />
+	<error sym="A" id="5">Account does not exist</error>
+	<created sym="A" id="1" />
+	<created sym="B" id="2" />
+	<created sym="B" id="3" />
+	<created sym="C" id="1" />
+	<created sym="A" id="4" />
+	<created sym="B" id="4" />
+</results>
+
+Table: symbols
+--------------------------------------------
+symbol_id	symbol	
+1	A	
+2	B	
+3	C	
+
+Table: accounts
+--------------------------------------------
+account_id	balance	
+1	10000.000000	
+2	10000.000000	
+3	30000.000000	
+4	10000.000000	
+
+Table: positions
+--------------------------------------------
+position_id	account_id	symbol_id	amount	
+3	2	1	1000.000000	
+1	1	1	3000.000000	
+5	2	2	1000.000000	
+6	3	2	1000.000000	
+7	1	3	1000.000000	
+8	4	1	1000.000000	
+9	4	2	1000.000000	
+
+Table: orders
+--------------------------------------------
+order_id	account_id	symbol_id	order_type	amount	limit_price	order_status	timestamp	
+
+Table: executed_orders
+--------------------------------------------
+order_id	amount	execution_price	timestamp	
+
+Table: canceled_orders
+--------------------------------------------
+order_id	cancel_timestamp	
+
+connect client success
+Connection from: 10.198.113.48
+order_1 sym_A_amount_-5000_limit_100.000000
+order_1 sym_A_amount_-500_limit_100.000000
+order_1 sym_B_amount_500_limit_100.000000
+order_1 sym_B_amount_5_limit_100.000000
+order_1 sym_C_amount_10_limit_50.000000
+order_1 sym_B_amount_-200000_limit_20000.000000
+order_1 sym_D_amount_20_limit_2000.000000
+the result xml is: 
+<?xml version="1.0"?>
+<results>
+	<error sym="A" amount="-5000.000000" limit="100.000000">Insufficient shares are available</error>
+	<opened sym="A" amount="-500.000000" limit="100.000000" id="1" />
+	<error sym="B" amount="500.000000" limit="100.000000">Insufficient funds are available</error>
+	<opened sym="B" amount="5.000000" limit="100.000000" id="2" />
+	<opened sym="C" amount="10.000000" limit="50.000000" id="3" />
+	<error sym="B" amount="-200000.000000" limit="20000.000000">Insufficient shares are available</error>
+	<error sym="D" amount="20.000000" limit="2000.000000">No such symbol yet</error>
+</results>
+
+Table: symbols
+--------------------------------------------
+symbol_id	symbol	
+1	A	
+2	B	
+3	C	
+
+Table: accounts
+--------------------------------------------
+account_id	balance	
+2	10000.000000	
+3	30000.000000	
+4	10000.000000	
+1	9000.000000	
+
+Table: positions
+--------------------------------------------
+position_id	account_id	symbol_id	amount	
+3	2	1	1000.000000	
+5	2	2	1000.000000	
+6	3	2	1000.000000	
+7	1	3	1000.000000	
+8	4	1	1000.000000	
+9	4	2	1000.000000	
+1	1	1	2500.000000	
+
+Table: orders
+--------------------------------------------
+order_id	account_id	symbol_id	order_type	amount	limit_price	order_status	timestamp	
+1	1	1	Sell	-500.000000	100.000000	open	1680805281	
+2	1	2	Buy	5.000000	100.000000	open	1680805281	
+3	1	3	Buy	10.000000	50.000000	open	1680805281	
+
+Table: executed_orders
+--------------------------------------------
+order_id	amount	execution_price	timestamp	
+
+Table: canceled_orders
+--------------------------------------------
+order_id	cancel_timestamp	
+
+connect client success
+Connection from: 10.198.113.48
+query 1
+query 2
+query 3
+query 4
+the result xml is: 
+<?xml version="1.0"?>
+<results>
+	<open shares="-500.000000" />
+	<open shares="5.000000" />
+	<open shares="10.000000" />
+	<error id="4"> Order does not exist </error>
+</results>
+
+Table: symbols
+--------------------------------------------
+symbol_id	symbol	
+1	A	
+2	B	
+3	C	
+
+Table: accounts
+--------------------------------------------
+account_id	balance	
+2	10000.000000	
+3	30000.000000	
+4	10000.000000	
+1	9000.000000	
+
+Table: positions
+--------------------------------------------
+position_id	account_id	symbol_id	amount	
+3	2	1	1000.000000	
+5	2	2	1000.000000	
+6	3	2	1000.000000	
+7	1	3	1000.000000	
+8	4	1	1000.000000	
+9	4	2	1000.000000	
+1	1	1	2500.000000	
+
+Table: orders
+--------------------------------------------
+order_id	account_id	symbol_id	order_type	amount	limit_price	order_status	timestamp	
+1	1	1	Sell	-500.000000	100.000000	open	1680805281	
+2	1	2	Buy	5.000000	100.000000	open	1680805281	
+3	1	3	Buy	10.000000	50.000000	open	1680805281	
+
+Table: executed_orders
+--------------------------------------------
+order_id	amount	execution_price	timestamp	
+
+Table: canceled_orders
+--------------------------------------------
+order_id	cancel_timestamp	
+
+connect client success
+Connection from: 10.198.113.48
+order_2 sym_A_amount_-8_limit_50.000000
+order_2 sym_B_amount_10_limit_100.000000
+order_2 sym_C_amount_-10_limit_20.000000
+query 6
+the result xml is: 
+<?xml version="1.0"?>
+<results>
+	<opened sym="A" amount="-8.000000" limit="50.000000" id="4" />
+	<opened sym="B" amount="10.000000" limit="100.000000" id="5" />
+	<error sym="C" amount="-10.000000" limit="20.000000">Insufficient shares are available</error>
+</results>
+
+Table: symbols
+--------------------------------------------
+symbol_id	symbol	
+1	A	
+2	B	
+3	C	
+
+Table: accounts
+--------------------------------------------
+account_id	balance	
+3	30000.000000	
+4	10000.000000	
+1	9000.000000	
+2	9000.000000	
+
+Table: positions
+--------------------------------------------
+position_id	account_id	symbol_id	amount	
+5	2	2	1000.000000	
+6	3	2	1000.000000	
+7	1	3	1000.000000	
+8	4	1	1000.000000	
+9	4	2	1000.000000	
+1	1	1	2500.000000	
+3	2	1	992.000000	
+
+Table: orders
+--------------------------------------------
+order_id	account_id	symbol_id	order_type	amount	limit_price	order_status	timestamp	
+1	1	1	Sell	-500.000000	100.000000	open	1680805281	
+2	1	2	Buy	5.000000	100.000000	open	1680805281	
+3	1	3	Buy	10.000000	50.000000	open	1680805281	
+4	2	1	Sell	-8.000000	50.000000	open	1680805281	
+5	2	2	Buy	10.000000	100.000000	open	1680805281	
+
+Table: executed_orders
+--------------------------------------------
+order_id	amount	execution_price	timestamp	
+
+Table: canceled_orders
+--------------------------------------------
+order_id	cancel_timestamp	
+
+connect client success
+Connection from: 10.198.113.48
+order_3 sym_A_amount_100_limit_100.000000
+order_3 sym_B_amount_-30_limit_50.000000
+order_3 sym_C_amount_40_limit_50.000000
+the result xml is: 
+<?xml version="1.0"?>
+<results>
+	<opened sym="A" amount="100.000000" limit="100.000000" id="6" />
+	<opened sym="B" amount="-30.000000" limit="50.000000" id="7" />
+	<opened sym="C" amount="40.000000" limit="50.000000" id="8" />
+</results>
+
+Table: symbols
+--------------------------------------------
+symbol_id	symbol	
+1	A	
+2	B	
+3	C	
+
+Table: accounts
+--------------------------------------------
+account_id	balance	
+4	10000.000000	
+2	9400.000000	
+1	18200.000000	
+3	19900.000000	
+
+Table: positions
+--------------------------------------------
+position_id	account_id	symbol_id	amount	
+7	1	3	1000.000000	
+8	4	1	1000.000000	
+9	4	2	1000.000000	
+1	1	1	2500.000000	
+3	2	1	992.000000	
+6	3	2	970.000000	
+5	2	2	1010.000000	
+
+Table: orders
+--------------------------------------------
+order_id	account_id	symbol_id	order_type	amount	limit_price	order_status	timestamp	
+3	1	3	Buy	10.000000	50.000000	open	1680805281	
+4	2	1	Sell	-8.000000	50.000000	executed	1680805281	
+1	1	1	Sell	-500.000000	100.000000	executed	1680805281	
+6	3	1	Buy	100.000000	100.000000	executed	1680805281	
+2	1	2	Buy	5.000000	100.000000	executed	1680805281	
+5	2	2	Buy	10.000000	100.000000	executed	1680805281	
+7	3	2	Sell	-15.000000	50.000000	open	1680805282	
+8	3	3	Buy	40.000000	50.000000	open	1680805282	
+
+Table: executed_orders
+--------------------------------------------
+order_id	amount	execution_price	timestamp	
+6	-8.000000	50.000000	1680805282	
+4	-8.000000	50.000000	1680805282	
+6	-92.000000	100.000000	1680805282	
+1	-92.000000	100.000000	1680805282	
+7	5.000000	100.000000	1680805282	
+2	5.000000	100.000000	1680805282	
+7	10.000000	100.000000	1680805282	
+5	10.000000	100.000000	1680805282	
+
+Table: canceled_orders
+--------------------------------------------
+order_id	cancel_timestamp	
+
+connect client success
+Connection from: 10.198.113.48
+query 7
+query 6
+query 1
+query 2
+cancel 6
+cancel 7
+the result xml is: 
+<?xml version="1.0"?>
+<results>
+	<error id="1"> Order does not exist </error>
+	<error id="2"> Order does not exist </error>
+	<error>Order not found or already canceled</error>
+	<error>Order not found or already canceled</error>
+</results>
+
+Table: symbols
+--------------------------------------------
+symbol_id	symbol	
+1	A	
+2	B	
+3	C	
+
+Table: accounts
+--------------------------------------------
+account_id	balance	
+4	10000.000000	
+2	9400.000000	
+1	18200.000000	
+3	19900.000000	
+
+Table: positions
+--------------------------------------------
+position_id	account_id	symbol_id	amount	
+7	1	3	1000.000000	
+8	4	1	1000.000000	
+9	4	2	1000.000000	
+1	1	1	2500.000000	
+3	2	1	992.000000	
+6	3	2	970.000000	
+5	2	2	1010.000000	
+
+Table: orders
+--------------------------------------------
+order_id	account_id	symbol_id	order_type	amount	limit_price	order_status	timestamp	
+3	1	3	Buy	10.000000	50.000000	open	1680805281	
+4	2	1	Sell	-8.000000	50.000000	executed	1680805281	
+1	1	1	Sell	-500.000000	100.000000	executed	1680805281	
+6	3	1	Buy	100.000000	100.000000	executed	1680805281	
+2	1	2	Buy	5.000000	100.000000	executed	1680805281	
+5	2	2	Buy	10.000000	100.000000	executed	1680805281	
+7	3	2	Sell	-15.000000	50.000000	open	1680805282	
+8	3	3	Buy	40.000000	50.000000	open	1680805282	
+
+Table: executed_orders
+--------------------------------------------
+order_id	amount	execution_price	timestamp	
+6	-8.000000	50.000000	1680805282	
+4	-8.000000	50.000000	1680805282	
+6	-92.000000	100.000000	1680805282	
+1	-92.000000	100.000000	1680805282	
+7	5.000000	100.000000	1680805282	
+2	5.000000	100.000000	1680805282	
+7	10.000000	100.000000	1680805282	
+5	10.000000	100.000000	1680805282	
+
+Table: canceled_orders
+--------------------------------------------
+order_id	cancel_timestamp	
+
+connect client success
+Connection from: 10.198.113.48
+order_5 sym_D_amount_100_limit_10.000000
+query 1
+query 2
+the result xml is: 
+<?xml version="1.0"?>
+<results>
+	<error id="1"> Order does not exist </error>
+	<error id="2"> Order does not exist </error>
+</results>
+
+Table: symbols
+--------------------------------------------
+symbol_id	symbol	
+1	A	
+2	B	
+3	C	
+
+Table: accounts
+--------------------------------------------
+account_id	balance	
+4	10000.000000	
+2	9400.000000	
+1	18200.000000	
+3	19900.000000	
+
+Table: positions
+--------------------------------------------
+position_id	account_id	symbol_id	amount	
+7	1	3	1000.000000	
+8	4	1	1000.000000	
+9	4	2	1000.000000	
+1	1	1	2500.000000	
+3	2	1	992.000000	
+6	3	2	970.000000	
+5	2	2	1010.000000	
+
+Table: orders
+--------------------------------------------
+order_id	account_id	symbol_id	order_type	amount	limit_price	order_status	timestamp	
+3	1	3	Buy	10.000000	50.000000	open	1680805281	
+4	2	1	Sell	-8.000000	50.000000	executed	1680805281	
+1	1	1	Sell	-500.000000	100.000000	executed	1680805281	
+6	3	1	Buy	100.000000	100.000000	executed	1680805281	
+2	1	2	Buy	5.000000	100.000000	executed	1680805281	
+5	2	2	Buy	10.000000	100.000000	executed	1680805281	
+7	3	2	Sell	-15.000000	50.000000	open	1680805282	
+8	3	3	Buy	40.000000	50.000000	open	1680805282	
+
+Table: executed_orders
+--------------------------------------------
+order_id	amount	execution_price	timestamp	
+6	-8.000000	50.000000	1680805282	
+4	-8.000000	50.000000	1680805282	
+6	-92.000000	100.000000	1680805282	
+1	-92.000000	100.000000	1680805282	
+7	5.000000	100.000000	1680805282	
+2	5.000000	100.000000	1680805282	
+7	10.000000	100.000000	1680805282	
+5	10.000000	100.000000	1680805282	
+
+Table: canceled_orders
+--------------------------------------------
+order_id	cancel_timestamp	
+
