@@ -4,10 +4,12 @@ services:
   stock_db:
     restart: always
     image: postgres
-    environment:
-        - POSTGRES_DB=postgres
-        - POSTGRES_USER=postgres
-        - POSTGRES_PASSWORD=passw0rd    
+    # environment:
+    #     - POSTGRES_DB=postgres
+    #     - POSTGRES_USER=postgres
+    #     - POSTGRES_PASSWORD=passw0rd    
+    volumes:
+      - ./init_sql:/docker-entrypoint-initdb.d
     expose:
       - "5432"
     ports:

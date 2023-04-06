@@ -273,7 +273,3 @@ if __name__ == "__main__":
         count_num = count_num + 1
     end_time = (int)(time.time() * 1000)
     print("Time cost: " + str(end_time - start_time))
-    
-    
-    # test14()
-    # 14测出来问题: user A 卖自己不拥有的position
