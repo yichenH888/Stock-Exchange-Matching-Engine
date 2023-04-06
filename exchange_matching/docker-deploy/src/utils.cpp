@@ -380,8 +380,9 @@ string handle_add_symbol(PGconn *conn, string key, string val) {
     if (PQresultStatus(result) != PGRES_COMMAND_OK) {
       PQclear(result);
       PQexec(conn, "ROLLBACK;");
-      return "<error sym=\"" + symbol + "\" id=\"" +
+      response << "<error sym=\"" + symbol + "\" id=\"" +
              std::to_string(account_id) + "\">Account does not exist</error>";
+      continue;
     }
 
     PQclear(result);
