@@ -317,7 +317,7 @@ std::vector<std::pair<int, double>> parse_symbol_val(const std::string &val) {
   return account_positions;
 }
 
-string handle_add_symbol(PGconn *conn, string key, string val) {
+void handle_add_symbol(PGconn *conn, string key, string val, vector<string> & results) {
   // Start a transaction
   PGresult *result = PQexec(conn, "BEGIN;");
   while (true) {
@@ -355,7 +355,7 @@ string handle_add_symbol(PGconn *conn, string key, string val) {
     if (PQresultStatus(result) != PGRES_TUPLES_OK) {
       PQclear(result);
       PQexec(conn, "ROLLBACK;");
-      return "<error sym=\"" + symbol + "\">Error adding symbol</error>";
+      results.push_back("<error sym=\"" + symbol + "\">Error adding symbol</error>");
     }
 
     symbol_id = std::stoi(PQgetvalue(result, 0, 0));
@@ -364,7 +364,7 @@ string handle_add_symbol(PGconn *conn, string key, string val) {
   PQclear(result);
 
   // Update the positions table for each account and return the created messages
-  std::stringstream response;
+  // std::stringstream response;
 
   for (const auto &[account_id, amount] : account_positions) {
     query = "SELECT account_id FROM accounts WHERE account_id = " +
@@ -373,9 +373,9 @@ string handle_add_symbol(PGconn *conn, string key, string val) {
 
     if (PQresultStatus(result) != PGRES_TUPLES_OK || PQntuples(result) == 0) {
       PQclear(result);
-      response << "<error sym=\"" + symbol + "\" id=\"" +
+      results.push_back("<error sym=\"" + symbol + "\" id=\"" +
                       std::to_string(account_id) +
-                      "\">Account does not exist</error>";
+                      "\">Account does not exist</error>");
       continue;
     }
     PQclear(result);
@@ -392,21 +392,18 @@ string handle_add_symbol(PGconn *conn, string key, string val) {
     if (PQresultStatus(result) != PGRES_COMMAND_OK) {
       PQclear(result);
       PQexec(conn, "ROLLBACK;");
-      response << "<error sym=\"" + symbol + "\" id=\"" +
+      results.push_back("<error sym=\"" + symbol + "\" id=\"" +
                       std::to_string(account_id) +
-                      "\">Account does not exist</error>";
+                      "\">Account does not exist</error>");
     } else {
       PQclear(result);
 
-      response << "<created sym=\"" << symbol << "\" id=\"" << account_id
-               << "\"/>\n";
+      results.push_back("<created sym=\"" + symbol + "\" id=\"" + to_string(account_id) + "\"/>");
     }
   }
 
   // Commit the transaction
   PQexec(conn, "COMMIT;");
-
-  return response.str();
 }
 
 Order parse_order_val(const std::string val) {
@@ -674,9 +671,9 @@ std::string create_xml_response(const std::vector<std::string> &input_elements) 
     pugi::xml_node results_node = doc.append_child("results");
 
     for (const auto &input : input_elements) {
-        cout << "----------------------------" << endl;
-        cout << input << endl;
-        cout << "----------------------------" << endl;
+        // cout << "---------------------" << endl;
+        // cout << input << endl;
+        // cout << "---------------------" << endl;
         pugi::xml_document temp_doc;
         pugi::xml_parse_result parse_result = temp_doc.load_string(input.c_str());
 
@@ -879,8 +876,7 @@ void *process_client(void *arg) {
       results.push_back(
           handle_add_account(conn, key, val)); // handles add account request
     else if (key.substr(0, 7) == "symbol_")
-      results.push_back(
-          handle_add_symbol(conn, key, val)); // handles add symbol request
+      handle_add_symbol(conn, key, val, results); // handles add symbol request
     else if (key.substr(0, 6) == "order_")
       results.push_back(
           handle_order(conn, key, val)); // handles order request, don't need
@@ -1414,7 +1410,8 @@ string handle_order(PGconn *conn, string key, string val) {
 string handle_cancel(PGconn *conn, string key, string val,
                      int transaction_account_id) {
   if (!check_account_exists(transaction_account_id, conn)) {
-    return "<canceled id=\"" + val + "\">\n" + "  <error id=\"" + to_string(transaction_account_id) +
+    return "<canceled id=\"" + val + "\">\n" + "  <error id=\"" +
+           to_string(transaction_account_id) +
            "\">Invalid Account ID</error>\n" + "</canceled>";
   }
   std::stringstream xml_result;
@@ -1508,7 +1505,8 @@ string handle_cancel(PGconn *conn, string key, string val,
 
     xml_result << "</canceled>" << endl;
   } else {
-    return "<canceled id=\"" + val + "\">\n" + "  <error id=\"" + to_string(transaction_account_id) +
+    return "<canceled id=\"" + val + "\">\n" + "  <error id=\"" +
+           to_string(transaction_account_id) +
            "\">Invalid Account ID</error>\n" + "</canceled>";
   }
 
