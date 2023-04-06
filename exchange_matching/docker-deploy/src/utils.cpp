@@ -669,30 +669,35 @@ std::string create_executed_tag(int shares, double price,
   return ss.str();
 }
 
-std::string create_xml_response(const std::vector<std::string> &results) {
-  pugi::xml_document doc;
-  pugi::xml_node results_node = doc.append_child("results");
+std::string create_xml_response(const std::vector<std::string> &input_elements) {
+    pugi::xml_document doc;
+    pugi::xml_node results_node = doc.append_child("results");
 
-  for (const std::string &result : results) {
-    std::stringstream ss(result);
-    std::string line;
+    for (const auto &input : input_elements) {
+        cout << "----------------------------" << endl;
+        cout << input << endl;
+        cout << "----------------------------" << endl;
+        pugi::xml_document temp_doc;
+        pugi::xml_parse_result parse_result = temp_doc.load_string(input.c_str());
 
-    while (std::getline(ss, line)) {
-      pugi::xml_document temp_doc;
-      pugi::xml_parse_result parse_result = temp_doc.load_string(line.c_str());
+        if (parse_result) {
+            pugi::xml_node first_child = temp_doc.first_child();
+            pugi::xml_node copied_node = results_node.append_copy(first_child);
 
-      if (parse_result) {
-        pugi::xml_node child = temp_doc.first_child();
-        results_node.append_copy(child);
-      }
+            // Remove the first child of the copied node to avoid duplication
+            copied_node.remove_child(copied_node.first_child());
+
+            // Merge the children of the first_child with copied_node
+            for (pugi::xml_node child = first_child.first_child(); child; child = child.next_sibling()) {
+                copied_node.append_copy(child);
+            }
+        }
     }
-  }
 
-  std::ostringstream oss;
-  doc.save(oss);
-  return oss.str();
+    std::ostringstream output_stream;
+    doc.save(output_stream);
+    return output_stream.str();
 }
-
 
 void send_xml_response(string xml_response, int receiver_fd) {
   size_t data_len = xml_response.size();
@@ -894,11 +899,11 @@ void *process_client(void *arg) {
   }
   // construct response xml
   string xml_response = create_xml_response(results);
-  cout << "the result xml is: " << endl;
-  cout << xml_response << endl;
+  // cout << "the result xml is: " << endl;
+  // cout << xml_response << endl;
   // send back response
   send_xml_response(xml_response, client_fd);
-  print_db(conn);
+  // print_db(conn);
   // Clean up and exit the thread
   close(client_fd);
   delete data;
@@ -1409,8 +1414,8 @@ string handle_order(PGconn *conn, string key, string val) {
 string handle_cancel(PGconn *conn, string key, string val,
                      int transaction_account_id) {
   if (!check_account_exists(transaction_account_id, conn)) {
-    return "<error id=\"" + to_string(transaction_account_id) +
-           ">Invalid Account ID<\"/error>";
+    return "<canceled id=\"" + val + "\">\n" + "  <error id=\"" + to_string(transaction_account_id) +
+           "\">Invalid Account ID</error>\n" + "</canceled>";
   }
   std::stringstream xml_result;
   int order_id = stoi(val); // Convert val to int for order_id
@@ -1503,7 +1508,8 @@ string handle_cancel(PGconn *conn, string key, string val,
 
     xml_result << "</canceled>" << endl;
   } else {
-    xml_result << "<error>Order not found or already canceled</error>" << endl;
+    return "<canceled id=\"" + val + "\">\n" + "  <error id=\"" + to_string(transaction_account_id) +
+           "\">Invalid Account ID</error>\n" + "</canceled>";
   }
 
   // End transaction
@@ -1516,7 +1522,8 @@ string handle_cancel(PGconn *conn, string key, string val,
 
 string handle_query(PGconn *conn, string key, string val) {
   if (!check_account_exists(stoi(val), conn)) {
-    return "<error id=\"" + val + ">Invalid Account ID<\"/error>";
+    return "<status id=\"" + val + "\">\n" + "  <error id=\"" + val +
+           "\">Invalid Account ID</error>\n" + "</status>";
   }
   if (key != "query")
     return "";
