@@ -15,7 +15,7 @@ services:
 
   exchange_matching:
     build: ./src
-    command: ./exchange_matching
+    command: bash -c "./run.sh"
     volumes:
       - ./src:/code
     expose:

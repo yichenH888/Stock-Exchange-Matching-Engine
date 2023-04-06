@@ -184,7 +184,7 @@ def test(trading_system):
 
 
 if __name__ == "__main__":
-    trading_system = TradingSystem("0.0.0.0", 12345, 99999)
+    trading_system = TradingSystem("vcm-30697.vm.duke.edu", 12345, 99999)
 
     count_num = 0
     start_time = (int)(time.time() * 1000)
