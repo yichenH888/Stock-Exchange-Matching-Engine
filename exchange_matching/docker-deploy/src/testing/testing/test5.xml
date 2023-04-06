@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<transactions id="12345"> 
+  <order sym="BIT" amount="-3" limit="1.24"/>
+</transactions>

@@ -40,7 +40,7 @@ int parse_xml_data(std::vector<std::pair<std::string, std::string>> &storage,
                    const std::string &xml_data, int &account_id);
 
 string handle_add_account(PGconn *conn, string key, string val);
-string handle_add_symbol(PGconn *conn, string key, string val);
+void handle_add_symbol(PGconn *conn, string key, string val, vector<string> & results);
 string handle_order(PGconn *conn, string key, string val);
 string handle_cancel(PGconn *conn, string key, string val, int transaction_account_id);
 string handle_query(PGconn *conn, string key, string val);
