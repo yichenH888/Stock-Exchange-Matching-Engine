@@ -809,8 +809,8 @@ void remove_all_tables(PGconn *conn) {
 }
 
 PGconn *init_db() {
-  const char *conninfo = "host=localhost port=5432 dbname=exchange_matching "
-                         "user=cy141 password=password";
+  const char *conninfo = "host=stock_db port=5432 dbname=postgres "
+                         "user=postgres password=passw0rd";
   PGconn *conn = PQconnectdb(conninfo);
 
   if (PQstatus(conn) == CONNECTION_BAD) {
