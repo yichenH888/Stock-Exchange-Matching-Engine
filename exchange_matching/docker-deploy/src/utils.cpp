@@ -367,6 +367,18 @@ string handle_add_symbol(PGconn *conn, string key, string val) {
   std::stringstream response;
 
   for (const auto &[account_id, amount] : account_positions) {
+    query = "SELECT account_id FROM accounts WHERE account_id = " +
+            std::to_string(account_id) + ";";
+    result = PQexec(conn, query.c_str());
+
+    if (PQresultStatus(result) != PGRES_TUPLES_OK || PQntuples(result) == 0) {
+      PQclear(result);
+      response << "<error sym=\"" + symbol + "\" id=\"" +
+                      std::to_string(account_id) +
+                      "\">Account does not exist</error>";
+      continue;
+    }
+    PQclear(result);
     query = "INSERT INTO positions (account_id, symbol_id, amount) VALUES (" +
             std::to_string(account_id) + ", " + std::to_string(symbol_id) +
             ", " + std::to_string(amount) +
@@ -381,14 +393,14 @@ string handle_add_symbol(PGconn *conn, string key, string val) {
       PQclear(result);
       PQexec(conn, "ROLLBACK;");
       response << "<error sym=\"" + symbol + "\" id=\"" +
-             std::to_string(account_id) + "\">Account does not exist</error>";
-      continue;
+                      std::to_string(account_id) +
+                      "\">Account does not exist</error>";
+    } else {
+      PQclear(result);
+
+      response << "<created sym=\"" << symbol << "\" id=\"" << account_id
+               << "\"/>\n";
     }
-
-    PQclear(result);
-
-    response << "<created sym=\"" << symbol << "\" id=\"" << account_id
-             << "\"/>\n";
   }
 
   // Commit the transaction
@@ -662,12 +674,17 @@ std::string create_xml_response(const std::vector<std::string> &results) {
   pugi::xml_node results_node = doc.append_child("results");
 
   for (const std::string &result : results) {
-    pugi::xml_document temp_doc;
-    pugi::xml_parse_result parse_result = temp_doc.load_string(result.c_str());
+    std::stringstream ss(result);
+    std::string line;
 
-    if (parse_result) {
-      pugi::xml_node child = temp_doc.first_child();
-      results_node.append_copy(child);
+    while (std::getline(ss, line)) {
+      pugi::xml_document temp_doc;
+      pugi::xml_parse_result parse_result = temp_doc.load_string(line.c_str());
+
+      if (parse_result) {
+        pugi::xml_node child = temp_doc.first_child();
+        results_node.append_copy(child);
+      }
     }
   }
 
@@ -675,6 +692,7 @@ std::string create_xml_response(const std::vector<std::string> &results) {
   doc.save(oss);
   return oss.str();
 }
+
 
 void send_xml_response(string xml_response, int receiver_fd) {
   size_t data_len = xml_response.size();
