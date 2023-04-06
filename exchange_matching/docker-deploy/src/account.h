@@ -2,11 +2,11 @@
 #include <stdexcept>
 
 class Account {
-private:
+   private:
     int account_id;
     double balance;
 
-public:
+   public:
     // Constructor
     Account(int account_id, double initial_balance) {
         if (initial_balance < 0) {
